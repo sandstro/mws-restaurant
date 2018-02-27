@@ -196,9 +196,6 @@ nav {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
 
   background-color: #f3f3f3;
   list-style: outside none none;
