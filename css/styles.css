@@ -188,6 +188,12 @@ nav {
   width: 200px;
 }
 
+.filter-options select:focus {
+  box-shadow: 0 0 3px 4px #fff;
+  border: 2px dotted #3998d9;
+  outline: 0;
+}
+
 
 /* ====================== Restaurant Listing ====================== */
 #restaurants-list {
