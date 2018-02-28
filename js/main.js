@@ -144,11 +144,11 @@ createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant__image';
-  image.alt = `Image of ${restaurant.name}`;
+  image.alt = `An image of ${restaurant.name} in ${restaurant.neighborhood}`;
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   wrapper.append(image);
 
-  const name = document.createElement('h1');
+  const name = document.createElement('h2');
   name.className = 'restaurant__title';
   name.innerHTML = restaurant.name;
   wrapper.append(name);
