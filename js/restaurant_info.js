@@ -6,6 +6,7 @@ var map;
  */
 window.initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
+    setTitle = () => document.querySelector('#map iframe').setAttribute('title', 'Location on Google Maps');
     if (error) { // Got an error!
       console.error(error);
     } else {
@@ -16,6 +17,7 @@ window.initMap = () => {
       });
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      self.map.addListener('tilesloaded', setTitle);
     }
   });
 }
