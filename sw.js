@@ -1,4 +1,4 @@
-var staticCacheName = 'restaurant-static-v1';
+var staticCacheName = 'restaurant-static-v2';
 
 var allCaches = [
   staticCacheName
@@ -10,10 +10,11 @@ self.addEventListener('install', function(event) {
       return cache.addAll([
         '/',
         '/restaurant.html',
+        'js/index.js',
         'js/dbhelper.js',
         'js/main.js',
         'js/restaurant_info.js',
-        'css/styles.css',
+        'dist/css/application.css',
         'https://fonts.gstatic.com/s/raleway/v12/1Ptug8zYS_SKggPNyCMIT4ttDfCmxA.woff2',
         'https://fonts.gstatic.com/s/raleway/v12/1Ptug8zYS_SKggPNyC0IT4ttDfA.woff2',
         'https://fonts.gstatic.com/s/raleway/v12/1Ptrg8zYS_SKggPNwJYtWqhPANqczVsq4A.woff2',
