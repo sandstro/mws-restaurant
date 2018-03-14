@@ -1,3 +1,5 @@
+let indexController = new IndexController();
+
 /**
  * Common database helper functions.
  */
@@ -22,6 +24,7 @@ class DBHelper {
       throw new Error('Network response was not ok.');
     }).then(json => {
       const restaurants = json;
+      indexController._onDataReceived(restaurants);
       callback(null, restaurants);
     }).catch(err => {
       const error = (`Request failed. Returned status of ${err.message}`);
