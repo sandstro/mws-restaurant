@@ -1,4 +1,4 @@
-let indexController = new IndexController();
+const indexController = new IndexController(document.querySelector('.main'));
 
 /**
  * Common database helper functions.

@@ -11,9 +11,11 @@ function openDatabase() {
   });
 }
 
-function IndexController() {
+function IndexController(container) {
+  this._container = container;
   this._dbPromise = openDatabase();
   this._registerServiceWorker();
+  this._showCachedMessages();
 }
 
 IndexController.prototype._registerServiceWorker = function() {
@@ -42,15 +44,39 @@ IndexController.prototype._onDataReceived = function(data) {
       store.put(restaurant);
     });
 
-    // Only store 30 newest videos.
+    // Only store 12 newest restaurants.
     store.openCursor(null, "prev").then(function(cursor) {
-      return cursor.advance(30);
+      return cursor.advance(12);
     }).then(function deleteRest(cursor) {
       if (!cursor) return;
       cursor.delete();
       return cursor.continue().then(deleteRest);
     });
   });
+};
 
-  // this._postsView.addPosts(messages);
+IndexController.prototype._showCachedMessages = function() {
+  var indexController = this;
+
+  return this._dbPromise.then(function(db) {
+    // if we're already showing restaurants, eg shift-refresh
+    // or the very first load, there's no point fetching
+    // posts from IDB
+    if (!db || indexController.showingRestaurants()) return;
+
+    var store = db.transaction('restaurants').objectStore('restaurants');
+    return store.getAll().then(function(restaurants) {
+      indexController.addRestaurants(restaurants);
+    });
+  });
+};
+
+// Check if there are any restaurants in DOM.
+IndexController.prototype.showingRestaurants = function() {
+  return !!this._container.querySelector('.restaurant');
+};
+
+IndexController.prototype.addRestaurants = function(restaurants) {
+  resetRestaurants(restaurants);
+  fillRestaurantsHTML(restaurants);
 };
