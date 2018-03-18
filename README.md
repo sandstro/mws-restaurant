@@ -18,3 +18,11 @@ In a terminal, check the version of Python you have: `python -V`. If you have Py
 
 2. With your server running, visit the site: `http://localhost:8000`.
 
+## Gulp commands
+
+To develop, run `gulp watch`
+To build, run `gulp dist`
+To compile scss, run `gulp style`
+
+**More tasks in gulpfile**
+
