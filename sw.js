@@ -14,6 +14,8 @@ self.addEventListener('install', function(event) {
         'js/dbhelper.js',
         'js/main.js',
         'js/restaurant_info.js',
+        'vendor/idb.js',
+        'vendor/lazyload.min.js',
         'css/application.css',
         'https://fonts.gstatic.com/s/raleway/v12/1Ptug8zYS_SKggPNyCMIT4ttDfCmxA.woff2',
         'https://fonts.gstatic.com/s/raleway/v12/1Ptug8zYS_SKggPNyC0IT4ttDfA.woff2',
