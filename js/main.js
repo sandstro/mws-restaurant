@@ -133,6 +133,7 @@ let fillRestaurantsHTML = (restaurants = self.restaurants) => {
     ul.append(createRestaurantHTML(restaurant));
   });
   addMarkersToMap();
+  window.myLazyLoad.update();
 }
 
 /**
@@ -148,7 +149,7 @@ let createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant__image';
   image.alt = `An image of ${restaurant.name} in ${restaurant.neighborhood}`;
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.dataset.src = DBHelper.imageUrlForRestaurant(restaurant, true);
   wrapper.append(image);
 
   const name = document.createElement('h2');
