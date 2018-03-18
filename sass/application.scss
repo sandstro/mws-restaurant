@@ -74,6 +74,11 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   min-height: 100%;
 }
 
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
 #footer {
   background-color: #444;
   color: #aaa;
@@ -147,6 +152,10 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   background-color: #ccc;
 }
 
+#map-container {
+  order: 1;
+}
+
 
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
@@ -216,7 +225,6 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 
 .restaurant__title {
-  color: #f18200;
   font-size: 1.2em;
   font-weight: 200;
   letter-spacing: 0;
@@ -429,6 +437,10 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 
   .restaurant__title {
     font-size: 1em;
+  }
+
+  .main {
+    display: block;
   }
 }
 
