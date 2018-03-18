@@ -4,7 +4,7 @@ var map;
 /**
  * Initialize Google map, called from HTML.
  */
-window.initMap = () => {
+window.initRestaurantMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     let setTitle = () => document.querySelector('#map iframe').setAttribute('title', 'Location on Google Maps');
     if (error) { // Got an error!
