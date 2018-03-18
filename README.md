@@ -18,7 +18,7 @@ In a terminal, check the version of Python you have: `python -V`. If you have Py
 
 2. With your server running, visit the site: `http://localhost:8000`.
 
-3. Fork and clone [this server repository]()https://github.com/udacity/mws-restaurant-stage-2. You’ll use this server as an API.
+3. Fork and clone [this server repository](https://github.com/udacity/mws-restaurant-stage-2). You’ll use this server as an API.
 
 #### Local API Server
 
