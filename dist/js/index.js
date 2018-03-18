@@ -1,14 +1,2 @@
-'use strict';
-
-(function () {
-  if (!navigator.serviceWorker) return;
-
-  navigator.serviceWorker.register('/sw.js').then(function (reg) {
-    if (!navigator.serviceWorker.controller) {
-      return;
-    }
-  }).catch(function (error) {
-    console.log('Registration failed with ' + error);
-  });
-})();
+"use strict";function openDatabase(){return navigator.serviceWorker?idb.open("restaurant",1,function(e){e.createObjectStore("restaurants",{keyPath:"id"})}):Promise.resolve()}function IndexController(e){this._container=e,this._dbPromise=openDatabase(),this._registerServiceWorker(),this._showCachedMessages()}IndexController.prototype._registerServiceWorker=function(){if(navigator.serviceWorker){navigator.serviceWorker.register("/sw.js").then(function(e){navigator.serviceWorker.controller}).catch(function(e){console.log("Registration failed with "+e)})}},IndexController.prototype._onDataReceived=function(e){var r=e;this._dbPromise.then(function(e){if(e){var t=e.transaction("restaurants","readwrite").objectStore("restaurants");r.forEach(function(e){t.put(e)}),t.openCursor(null,"prev").then(function(e){return e.advance(12)}).then(function e(t){if(t)return t.delete(),t.continue().then(e)})}})},IndexController.prototype._showCachedMessages=function(){var t=this;return this._dbPromise.then(function(e){if(console.log("showingData?",t.showingData()),e&&!t.showingData())return e.transaction("restaurants").objectStore("restaurants").getAll().then(function(e){t._container.classList.contains("inside")?t.addRestaurant(e.find(function(e){return e.id==getParameterByName("id")})):t.addRestaurants(e)})})},IndexController.prototype.showingData=function(){return!!this._container.querySelector(".restaurant")||!!this._container.querySelector("#breadcrumb")&&2===this._container.querySelector("#breadcrumb").children.length},IndexController.prototype.addRestaurants=function(e){resetRestaurants(e),fillRestaurantsHTML(e)},IndexController.prototype.addRestaurant=function(e){console.log("addRestaurant"),e&&(fillBreadcrumb(e),fillRestaurantHTML(e))};
 //# sourceMappingURL=index.js.map
