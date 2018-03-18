@@ -15,7 +15,7 @@ window.initRestaurantMap = () => {
         center: restaurant.latlng,
         scrollwheel: false
       });
-      fillBreadcrumb();
+      fillBreadcrumb(restaurant);
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
       self.map.addListener('tilesloaded', setTitle);
     }
@@ -26,12 +26,12 @@ window.initRestaurantMap = () => {
  * Get current restaurant from page URL.
  */
 let fetchRestaurantFromURL = (callback) => {
-  if (self.restaurant) { // restaurant already fetched!
+  if (self.restaurant) { // Restaurant already fetched!
     callback(null, self.restaurant)
     return;
   }
   const id = getParameterByName('id');
-  if (!id) { // no id found in URL
+  if (!id) { // No id found in URL.
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
@@ -48,7 +48,7 @@ let fetchRestaurantFromURL = (callback) => {
 }
 
 /**
- * Create restaurant HTML and add it to the webpage
+ * Create restaurant HTML and add it to the webpage.
  */
 let fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
@@ -65,12 +65,14 @@ let fillRestaurantHTML = (restaurant = self.restaurant) => {
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
 
-  // fill operating hours
-  if (restaurant.operating_hours) {
-    fillRestaurantHoursHTML();
+  // Fill operating hours.
+  if (restaurant.operating_hours && !nodeHasContent('#restaurant-hours')) {
+    fillRestaurantHoursHTML(restaurant.operating_hours);
   }
-  // fill reviews
-  fillReviewsHTML();
+  // Fill reviews.
+  if (restaurant.reviews && !nodeHasContent('#reviews-list')) {
+    fillReviewsHTML(restaurant.reviews);
+  }
 }
 
 /**
@@ -143,13 +145,15 @@ let createReviewHTML = (review) => {
 }
 
 /**
- * Add restaurant name to the breadcrumb navigation menu
+ * Add restaurant name to the breadcrumb navigation menu.
  */
-let fillBreadcrumb = (restaurant=self.restaurant) => {
+let fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
-  const li = document.createElement('li');
-  li.innerHTML = restaurant.name;
-  breadcrumb.appendChild(li);
+  if (breadcrumb.children.length === 1) {
+    const li = document.createElement('li');
+    li.innerHTML = restaurant.name;
+    breadcrumb.appendChild(li);
+  }
 }
 
 /**
@@ -168,3 +172,9 @@ let getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
+/**
+ * Check if node contains data.
+ */
+let nodeHasContent = (node) => {
+  return document.querySelector(node).children.length > 0;
+}
