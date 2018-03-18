@@ -18,11 +18,41 @@ In a terminal, check the version of Python you have: `python -V`. If you have Py
 
 2. With your server running, visit the site: `http://localhost:8000`.
 
+3. Fork and clone [this server repository]()https://github.com/udacity/mws-restaurant-stage-2. You’ll use this server as an API.
+
+#### Local API Server
+
+The server depends on node.js LTS Version: v6.11.2 , npm, and sails.js. Please, make sure you have these installed before proceeding forward.
+
+###### Install project dependancies
+```Install project dependancies
+# npm i
+```
+
+###### Install Sails.js globally
+```Install sails global
+# npm i sails -g
+```
+
+###### Start the server
+```Start server
+# node server
+```
+
+###### Get Restaurants
+````
+# curl "http://localhost:1337/restaurants"
+````
+###### Get Restaurants by id
+````
+curl "http://localhost:1337/restaurants/{3}"
+````
+
 ## Gulp commands
 
-To develop, run `gulp watch`
-To build, run `gulp dist`
-To compile scss, run `gulp style`
+To develop, run `gulp watch`.
+To build, run `gulp dist`.
+To compile scss, run `gulp style`.
 
 **More tasks in gulpfile**
 
