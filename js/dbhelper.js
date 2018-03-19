@@ -151,10 +151,14 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant, wall = false) {
-    if (wall) {
-      return (`/img/wall/${restaurant.photograph}`);
+    // Use 10.jpg as a default imgae is photograph missing.
+    if (!restaurant.hasOwnProperty('photograph')) {
+      restaurant.photograph = '10';
     }
-    return (`/img/${restaurant.photograph}`);
+    if (wall) {
+      return (`/img/wall/${restaurant.photograph}.jpg`);
+    }
+    return (`/img/${restaurant.photograph}.jpg`);
   }
 
   /**
