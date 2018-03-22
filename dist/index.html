@@ -5,23 +5,18 @@
   <meta name="theme-color" content="#3998d9">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="dns-prefetch" href="https://ajax.googleapis.com">
+  <link rel="dns-prefetch" href="https://maps.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://maps.gstatic.com">
   <link href="css/application.css" rel="stylesheet" media="screen">
   <link rel="manifest" href="manifest.json">
+  <link rel="preload" href="vendor/idb.js" as="script">
+  <link rel="preload" href="js/index.js" as="script">
+  <link rel="preload" href="js/dbhelper.js" as="script">
+  <link rel="preload" href="js/main.js" as="script">
+  <link rel="preload" href="vendor/lazyload.min.js" as="script">
   <title>Restaurant Reviews</title>
-  <script type="text/javascript">
-    WebFontConfig = {
-      google: { families: [ 'Raleway:400,700:latin' ] }
-    };
-    (function() {
-      var wf = document.createElement('script');
-      wf.src = ('https:' == document.location.protocol ? 'https' : 'https') +
-        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-      wf.type = 'text/javascript';
-      wf.async = 'true';
-      var s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(wf, s);
-    })();
-  </script>
 </head>
 
 <body>
@@ -54,6 +49,13 @@
     Copyright (c) 2017 <a href="/"><strong>Restaurant&nbsp;Reviews</strong></a> All&nbsp;Rights&nbsp;Reserved.
   </footer>
 
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
   <script src="vendor/idb.js"></script>
   <script src="js/index.js"></script>
   <script src="js/dbhelper.js"></script>
