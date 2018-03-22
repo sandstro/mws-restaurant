@@ -17,18 +17,24 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    fetch(DBHelper.DATABASE_URL).then(response => {
-      if (response.ok) {
-        return response.json();
+    indexController._checkDataExists().then(restaurants => {
+      if (restaurants.length === 0) {
+        fetch(DBHelper.DATABASE_URL).then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error('Network response was not ok.');
+        }).then(json => {
+          const restaurants = json;
+          indexController._onDataReceived(restaurants);
+          callback(null, restaurants);
+        }).catch(err => {
+          const error = (`Request failed. Returned status of ${err.message}`);
+          callback(error, null);
+        });
+      } else {
+        callback(null, restaurants);
       }
-      throw new Error('Network response was not ok.');
-    }).then(json => {
-      const restaurants = json;
-      indexController._onDataReceived(restaurants);
-      callback(null, restaurants);
-    }).catch(err => {
-      const error = (`Request failed. Returned status of ${err.message}`);
-      callback(error, null);
     });
   }
 

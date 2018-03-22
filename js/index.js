@@ -16,23 +16,8 @@ function openDatabase() {
 function IndexController(container) {
   this._container = container;
   this._dbPromise = openDatabase();
-  this._registerServiceWorker();
   this._showCachedMessages();
 }
-
-IndexController.prototype._registerServiceWorker = function() {
-  if (!navigator.serviceWorker) return;
-
-  var indexController = this;
-
-  navigator.serviceWorker.register('/sw.js').then(function(reg) {
-    if (!navigator.serviceWorker.controller) {
-      return;
-    }
-  }).catch(function(error) {
-    console.log('Registration failed with ' + error);
-  });
-};
 
 /**
  * Put data to IndexedDB whenever live data is fetched and received.
@@ -93,6 +78,19 @@ IndexController.prototype.showingData = function() {
     this._container.querySelector('#breadcrumb').children.length === 2)
   );
 };
+
+/**
+ * Check if data in IndexedDB and return restaurants.
+ */
+IndexController.prototype._checkDataExists = function() {
+  return this._dbPromise.then(function(db) {
+    var store = db.transaction('restaurants').objectStore('restaurants');
+    return store.getAll().then(function(restaurants) {
+      return restaurants;
+    });
+  });
+};
+
 
 /**
  * Add restaurants from cache.

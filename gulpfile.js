@@ -15,9 +15,9 @@ var paths = {
   },
   js: {
     src: 'js/**/*.js',
-    // local_dest: 'js',
-    dist_dest: 'dist/js',
-    concat: 'all.js'
+    local_dest: 'js',
+    dist_dest: 'dist/js'
+    // concat: 'all.js'
   }
 }
 
