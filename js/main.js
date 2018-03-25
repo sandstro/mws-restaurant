@@ -129,9 +129,7 @@ let resetRestaurants = (restaurants) => {
  */
 let fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.getElementById('restaurants-list');
-  restaurants.forEach(restaurant => {
-    ul.append(createRestaurantHTML(restaurant));
-  });
+  ul.innerHTML = restaurants.map(restaurant => createRestaurantHTML(restaurant)).join('');
   addMarkersToMap();
   window.myLazyLoad.update();
 }
@@ -140,42 +138,18 @@ let fillRestaurantsHTML = (restaurants = self.restaurants) => {
  * Create restaurant HTML.
  */
 let createRestaurantHTML = (restaurant) => {
-  const li = document.createElement('li');
-  li.className = 'restaurant';
-
-  const wrapper = document.createElement('div');
-  wrapper.className = 'restaurant__wrapper';
-
-  const image = document.createElement('img');
-  image.className = 'restaurant__image';
-  image.alt = `An image of ${restaurant.name} in ${restaurant.neighborhood}`;
-  image.dataset.src = DBHelper.imageUrlForRestaurant(restaurant, true);
-  wrapper.append(image);
-
-  const name = document.createElement('h2');
-  name.className = 'restaurant__title';
-  name.innerHTML = restaurant.name;
-  wrapper.append(name);
-
-  const neighborhood = document.createElement('p');
-  neighborhood.className = 'restaurant__paragraph';
-  neighborhood.innerHTML = restaurant.neighborhood;
-  wrapper.append(neighborhood);
-
-  const address = document.createElement('p');
-  address.className = 'restaurant__paragraph';
-  address.innerHTML = restaurant.address;
-  wrapper.append(address);
-
-  const more = document.createElement('a');
-  more.className = 'restaurant__link';
-  more.innerHTML = 'View Details';
-  more.href = DBHelper.urlForRestaurant(restaurant);
-  wrapper.append(more)
-
-  li.append(wrapper);
-
-  return li
+  return `
+    <li class="restaurant">
+      <div class="restaurant__wrapper">
+        <img class="restaurant__image"
+          alt="An image of ${restaurant.name} in ${restaurant.neighborhood}"
+          data-src="${DBHelper.imageUrlForRestaurant(restaurant, true)}" />
+        <h2 class="restaurant__title">${restaurant.name}</h2>
+        <p class="restaurant__paragraph">${restaurant.address}</p>
+        <a class="restaurant__link" href="${DBHelper.urlForRestaurant(restaurant)}">View Details</a>
+      </div>
+    </li>
+  `;
 }
 
 /**
