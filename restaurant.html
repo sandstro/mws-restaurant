@@ -41,6 +41,30 @@
       <p id="restaurant-address"></p>
       <table id="restaurant-hours"></table>
     </section>
+
+    <section>
+      <h2>Add your review</h2>
+      <form>
+        <label>Reviewer:
+          <input type="text" name="name" />
+        </label>
+        <div>
+          <p>Your rating:</p>
+          <select aria-label="Select rating for restaurant" name="rating">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <label>Comments:
+          <textarea name="comment"></textarea>
+        </label>
+        <button onclick="handleSubmit()">Add review</button>
+      </form>
+    </section>
+
     <section id="reviews-container">
       <ul aria-labelledby="reviews__heading" id="reviews-list"></ul>
     </section>

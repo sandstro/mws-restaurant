@@ -10,7 +10,7 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337
-    return `http://localhost:${port}/restaurants`;
+    return `http://localhost:${port}`;
   }
 
   /**
@@ -39,10 +39,17 @@ class DBHelper {
   }
 
   /**
+   * Proxy to IndexController.
+   */
+  static fetchReviews(restaurantId) {
+    return indexController.fetchReviews(restaurantId);
+  }
+
+  /**
    * Send restaurant favorite status change to DB.
    */
   static setFavorite(restaurantId, isFavorite) {
-    fetch(`${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`, {
+    fetch(`${DBHelper.DATABASE_URL}/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {
       method: 'PUT',
     }).then(() => {
       indexController._dbPromise.then(db => {
@@ -53,6 +60,56 @@ class DBHelper {
           store.put(restaurant);
         });
       });
+    });
+  }
+
+  /**
+   * Post review to DB.
+   */
+  static postReview(review) {
+    const temp = {
+      name: 'offline',
+      data: review,
+      object_type: 'review',
+    };
+    if (!navigator.onLine && temp.name === 'offline') {
+      DBHelper.synchronize(temp);
+      return;
+    }
+    const { name, rating, comment, restaurant_id } = review;
+    const myReview = {
+      name,
+      rating,
+      comment,
+      restaurant_id,
+    };
+    fetch(`${DBHelper.DATABASE_URL}/reviews`, {
+      method: 'POST',
+      body: JSON.stringify(myReview),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      })
+    }).then(resp => {
+      const contentType = resp.headers.get('content-type');
+      if (contentType && contentType.indexOf('application/json') !== -1) {
+        return resp.json();
+      }
+    });
+  }
+
+  /**
+   * Use localStorage to set up background sync-ish functionality
+   */
+  static synchronize(review) {
+    localStorage.setItem('review', JSON.stringify(review.data));
+    window.addEventListener('online', () => {
+      const data = JSON.parse(localStorage.getItem('review'));
+      if (data !== null) {
+        if (review.name === 'addReview') {
+          DBHelper.postReview(review.data);
+        }
+        localStorage.removeItem('review');
+      }
     });
   }
 

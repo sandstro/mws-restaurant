@@ -1,5 +1,5 @@
 let restaurant;
-var map;
+let map;
 
 /**
  * Initialize Google map, called from HTML.
@@ -70,9 +70,43 @@ let fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML(restaurant.operating_hours);
   }
   // Fill reviews.
-  if (restaurant.reviews && !nodeHasContent('#reviews-list')) {
-    fillReviewsHTML(restaurant.reviews);
-  }
+  DBHelper.fetchReviews(restaurant.id).then(results => {
+    fillReviewsHTML(results);
+  });
+}
+
+/**
+ * Handle submit when generating new review.
+ */
+const handleSubmit = () => {
+  event.preventDefault();
+  const restaurantId = getParameterByName('id');
+  const name = document.querySelector('input[name="name"]').value;
+  const rating = document.querySelector('select[name="rating"] option:checked').value;
+  const comment = document.querySelector('textarea[name="comment"]').value;
+  const review = {
+    createdAt: new Date(),
+    restaurant_id: parseInt(restaurantId),
+    rating: parseInt(rating),
+    name,
+    comment,
+  };
+
+  DBHelper.postReview(review);
+  fillSubmittedReviewHTML(review);
+  document.querySelector('form').reset();
+};
+
+/**
+ * Fill submitted review HTML.
+ */
+fillSubmittedReviewHTML = review => {
+  const noReviews = document.querySelector('.no-review');
+  if (noReviews) noReviews.remove();
+  const container = document.querySelector('#reviews-container');
+  const ul = document.querySelector('#reviews-list');
+  ul.insertBefore(createReviewHTML(review), ul.firstChild);
+  container.appendChild(ul);
 }
 
 /**
@@ -109,6 +143,7 @@ let fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   if (!reviews) {
     const noReviews = document.createElement('p');
+    noReviews.className = 'reviews--none';
     noReviews.innerHTML = 'No reviews yet!';
     container.appendChild(noReviews);
     return;
@@ -130,7 +165,7 @@ let createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = new Date(review.createdAt);
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -138,7 +173,7 @@ let createReviewHTML = (review) => {
   li.appendChild(rating);
 
   const comments = document.createElement('p');
-  comments.innerHTML = review.comments;
+  comments.innerHTML = review.comments || review.comment;
   li.appendChild(comments);
 
   return li;

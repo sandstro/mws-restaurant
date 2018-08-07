@@ -6,25 +6,66 @@ function openDatabase() {
     return Promise.resolve();
   }
 
-  return idb.open('restaurant', 1, function(upgradeDb) {
-    var store = upgradeDb.createObjectStore('restaurants', {
-      keyPath: 'id'
-    });
+  return idb.open('restaurant', 2, function(upgradeDb) {
+    switch(upgradeDb.oldVersion) {
+      case 0:
+        upgradeDb.createObjectStore('restaurants', {
+          keyPath: 'id'
+        });
+      case 1:
+        upgradeDb.createObjectStore('reviews', {
+          keyPath: 'id'
+        }).createIndex('restaurant', 'restaurant_id');
+    }
   });
 }
 
 function IndexController(container) {
+  this.DATABASE_URL = 'http://localhost:1337';
   this._container = container;
   this._dbPromise = openDatabase();
-  this._showCachedMessages();
 }
+
+IndexController.prototype.fetchReviews = function(restaurantId) {
+  return fetch(`${this.DATABASE_URL}/reviews/?restaurant_id=${restaurantId}`)
+    .then(resp => resp.json())
+    .then(reviews => {
+      this._dbPromise.then(db => {
+        if (!db) return;
+        const tx = db.transaction('reviews', 'readwrite');
+        const store = tx.objectStore('reviews');
+
+        if (Array.isArray(reviews)) {
+          reviews.forEach(review => {
+            store.put(review);
+          });
+        } else {
+          store.put(reviews);
+        }
+      });
+      return Promise.resolve(reviews);
+    }).catch(error => {
+      return this.getObjectFromStore(restaurantId)
+        .then(reviewsInStore => {
+          return Promise.resolve(reviewsInStore);
+        });
+    });
+};
+
+IndexController.prototype.getObjectFromStore = function(restaurantId) {
+  return this._dbPromise.then(db => {
+    if (!db) return;
+    const store = db.transaction('reviews').objectStore('reviews');
+    const index = store.index('restaurant');
+    return index.getAll(restaurantId);
+  });
+};
 
 /**
  * Put data to IndexedDB whenever live data is fetched and received.
  */
 IndexController.prototype._onDataReceived = function(data) {
   var restaurants = data;
-
   this._dbPromise.then(function(db) {
     if (!db) return;
 
@@ -41,29 +82,6 @@ IndexController.prototype._onDataReceived = function(data) {
       if (!cursor) return;
       cursor.delete();
       return cursor.continue().then(deleteRest);
-    });
-  });
-};
-
-/**
- * Run at initialization, show cached content before fetching new data.
- */
-IndexController.prototype._showCachedMessages = function() {
-  var indexController = this;
-
-  return this._dbPromise.then(function(db) {
-    // If we're already showing restaurant(s), eg shift-refresh
-    // or the very first load, there's no point fetching
-    // posts from IDB
-    if (!db || indexController.showingData()) return;
-
-    var store = db.transaction('restaurants').objectStore('restaurants');
-    return store.getAll().then(function(restaurants) {
-      if (indexController._container.classList.contains('inside')) {
-        indexController.addRestaurant(restaurants.find(r => r.id == getParameterByName('id')));
-      } else {
-        indexController.addRestaurants(restaurants);
-      }
     });
   });
 };
@@ -89,23 +107,4 @@ IndexController.prototype._checkDataExists = function() {
       return restaurants;
     });
   });
-};
-
-
-/**
- * Add restaurants from cache.
- */
-IndexController.prototype.addRestaurants = function(restaurants) {
-  resetRestaurants(restaurants);
-  fillRestaurantsHTML(restaurants);
-};
-
-/**
- * Add restaurant from cache.
- */
-IndexController.prototype.addRestaurant = function(restaurant) {
-  if (restaurant) {
-    fillBreadcrumb(restaurant);
-    fillRestaurantHTML(restaurant);
-  }
 };

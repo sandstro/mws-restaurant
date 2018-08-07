@@ -279,6 +279,10 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   }
 }
 
+input, textarea {
+  display: block;
+}
+
 
 /* ====================== Restaurant Details ====================== */
 .inside {
