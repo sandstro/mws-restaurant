@@ -38,7 +38,7 @@ gulp.task('copy-images', function(done) {
 gulp.task('copy-other', function(done) {
   gulp.src(['./sw.js', './manifest.json'])
     .pipe(gulp.dest('./dist'));
-  gulp.src(['node_modules/vanilla-lazyload/dist/lazyload.min.js', 'node_modules/idb/lib/idb.js'])
+  gulp.src(['node_modules/idb/lib/idb.js'])
     .pipe(gulp.dest('./dist/vendor'));
   done();
 });
