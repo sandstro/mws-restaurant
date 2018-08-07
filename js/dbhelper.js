@@ -39,6 +39,24 @@ class DBHelper {
   }
 
   /**
+   * Send restaurant favorite status change to DB.
+   */
+  static setFavorite(restaurantId, isFavorite) {
+    fetch(`${DBHelper.DATABASE_URL}/${restaurantId}/?is_favorite=${isFavorite}`, {
+      method: 'PUT',
+    }).then(() => {
+      indexController._dbPromise.then(db => {
+        const tx = db.transaction('restaurants', 'readwrite');
+        const store = tx.objectStore('restaurants');
+        store.get(restaurantId).then(restaurant => {
+          restaurant.is_favorite = isFavorite;
+          store.put(restaurant);
+        });
+      });
+    });
+  }
+
+  /**
    * Fetch a restaurant by its ID.
    */
   static fetchRestaurantById(id, callback) {
@@ -161,10 +179,7 @@ class DBHelper {
     if (!restaurant.hasOwnProperty('photograph')) {
       restaurant.photograph = '10';
     }
-    if (wall) {
-      return (`/img/wall/${restaurant.photograph}.jpg`);
-    }
-    return (`/img/${restaurant.photograph}.jpg`);
+    return (`/img/${restaurant.photograph}.webp`);
   }
 
   /**

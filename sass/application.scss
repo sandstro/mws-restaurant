@@ -258,6 +258,27 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   }
 }
 
+.restaurant__favorite {
+  background: 0;
+  border: 0;
+  border-radius: 100%;
+  color: #111;
+  transition: transform .2s ease;
+  vertical-align: middle;
+  position: relative;
+  font-size: 1.2em;
+
+  &:hover, &:focus {
+    transform: scale(1.2);
+    outline: none;
+  }
+
+  &.restaurant__favorite--true {
+    background: #BADA55;
+    color: #fff;
+  }
+}
+
 
 /* ====================== Restaurant Details ====================== */
 .inside {
