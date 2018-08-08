@@ -69,6 +69,7 @@ let fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours && !nodeHasContent('#restaurant-hours')) {
     fillRestaurantHoursHTML(restaurant.operating_hours);
   }
+
   // Fill reviews.
   DBHelper.fetchReviews(restaurant.id).then(results => {
     fillReviewsHTML(results);
@@ -79,7 +80,7 @@ let fillRestaurantHTML = (restaurant = self.restaurant) => {
  * Handle submit when generating new review.
  */
 const handleSubmit = () => {
-  event.preventDefault();
+  event.preventDefault(); // prevent default submit from reloading page
   const restaurantId = getParameterByName('id');
   const name = document.querySelector('input[name="name"]').value;
   const rating = document.querySelector('select[name="rating"] option:checked').value;
@@ -91,17 +92,16 @@ const handleSubmit = () => {
     name,
     comment,
   };
-
   DBHelper.postReview(review);
   fillSubmittedReviewHTML(review);
-  document.querySelector('form').reset();
+  document.querySelector('form').reset(); // reset form to mimic submit
 };
 
 /**
  * Fill submitted review HTML.
  */
 fillSubmittedReviewHTML = review => {
-  const noReviews = document.querySelector('.no-review');
+  const noReviews = document.querySelector('.reviews--none');
   if (noReviews) noReviews.remove();
   const container = document.querySelector('#reviews-container');
   const ul = document.querySelector('#reviews-list');
@@ -162,6 +162,17 @@ let createReviewHTML = (review) => {
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;
+
+  if (!navigator.onLine) {
+    const status = document.createElement('div');
+    status.className = 'restaurant__review__offline__label';
+    status.style.background = '#f00';
+    status.style.color = '#fff';
+    status.style.paddingLeft = '1em';
+    status.innerHTML = 'Connection lost!';
+    li.appendChild(status);
+  }
+
   li.appendChild(name);
 
   const date = document.createElement('p');

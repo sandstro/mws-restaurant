@@ -35,20 +35,15 @@ IndexController.prototype.fetchReviews = function(restaurantId) {
         const tx = db.transaction('reviews', 'readwrite');
         const store = tx.objectStore('reviews');
 
-        if (Array.isArray(reviews)) {
-          reviews.forEach(review => {
-            store.put(review);
-          });
+        if (reviews.constructor === Array) {
+          reviews.forEach(review => store.put(review));
         } else {
           store.put(reviews);
         }
       });
       return Promise.resolve(reviews);
     }).catch(error => {
-      return this.getObjectFromStore(restaurantId)
-        .then(reviewsInStore => {
-          return Promise.resolve(reviewsInStore);
-        });
+      return this.getObjectFromStore(restaurantId).then(reviewsInStore => Promise.resolve(reviewsInStore));
     });
 };
 

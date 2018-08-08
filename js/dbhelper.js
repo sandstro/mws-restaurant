@@ -19,7 +19,7 @@ class DBHelper {
   static fetchRestaurants(callback) {
     indexController._checkDataExists().then(restaurants => {
       if (restaurants.length === 0) {
-        fetch(DBHelper.DATABASE_URL).then(response => {
+        fetch(`${DBHelper.DATABASE_URL}/restaurants`).then(response => {
           if (response.ok) {
             return response.json();
           }
@@ -68,21 +68,18 @@ class DBHelper {
    */
   static postReview(review) {
     const temp = {
-      name: 'offline',
+      name: 'temp',
       data: review,
       object_type: 'review',
     };
-    if (!navigator.onLine && temp.name === 'offline') {
-      DBHelper.synchronize(temp);
+
+    if (!navigator.onLine) {
+      DBHelper.synchronize(temp); // Connection lost
       return;
     }
+
     const { name, rating, comment, restaurant_id } = review;
-    const myReview = {
-      name,
-      rating,
-      comment,
-      restaurant_id,
-    };
+    const myReview = { name, rating, comment, restaurant_id };
     fetch(`${DBHelper.DATABASE_URL}/reviews`, {
       method: 'POST',
       body: JSON.stringify(myReview),
@@ -90,26 +87,25 @@ class DBHelper {
         'Content-Type': 'application/json',
       })
     }).then(resp => {
-      const contentType = resp.headers.get('content-type');
-      if (contentType && contentType.indexOf('application/json') !== -1) {
-        return resp.json();
-      }
+      if (resp.headers.get('content-type').indexOf('application/json') !== -1) return resp.json();
     });
   }
 
   /**
-   * Use localStorage to set up background sync-ish functionality
+   * Use localStorage to set up background sync-ish functionality.
+   * This idea came from the webcast for last stage3.
    */
   static synchronize(review) {
     localStorage.setItem('review', JSON.stringify(review.data));
     window.addEventListener('online', () => {
       const data = JSON.parse(localStorage.getItem('review'));
-      if (data !== null) {
-        if (review.name === 'addReview') {
-          DBHelper.postReview(review.data);
-        }
-        localStorage.removeItem('review');
+      const offlineLabels = Array.prototype.slice.call(document.querySelectorAll('.restaurant__review__offline__label'));
+      console.log('offlineLabels', offlineLabels);
+      offlineLabels.forEach(el => el.remove());
+      if (review.name === 'temp') {
+        DBHelper.postReview(review.data);
       }
+      localStorage.removeItem('review');
     });
   }
 
