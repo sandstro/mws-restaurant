@@ -1,23 +1,33 @@
 let restaurant;
-let map;
+let newMap;
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  initRestaurantMap();
+});
 
 /**
  * Initialize Google map, called from HTML.
  */
 window.initRestaurantMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
-    let setTitle = () => document.querySelector('#map iframe').setAttribute('title', 'Location on Google Maps');
     if (error) { // Got an error!
       console.error(error);
     } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
+      self.newMap = L.map('map', {
+        center: [restaurant.latlng.lat, restaurant.latlng.lng],
         zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
+        scrollWheelZoom: false
       });
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
+        mapboxToken: 'pk.eyJ1Ijoic2FuZHN0cm8iLCJhIjoiY2prbDRobHQ2MDg5bjNxdGg5Y2R2ZzN6ZSJ9.bqghcRTSbnJXRMIpBR371A',
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+          'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox.streets'
+      }).addTo(self.newMap);
       fillBreadcrumb(restaurant);
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-      self.map.addListener('tilesloaded', setTitle);
+      DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
 }
