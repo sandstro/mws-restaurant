@@ -1,4 +1,4 @@
-var staticCacheName = 'restaurant-static-v5';
+var staticCacheName = 'restaurant-static-v7';
 
 var allCaches = [
   staticCacheName
@@ -15,7 +15,6 @@ self.addEventListener('install', function(event) {
         'js/main.js',
         'js/restaurant_info.js',
         'vendor/idb.js',
-        'vendor/lazyload.min.js',
         'css/application.css'
       ]);
     })
