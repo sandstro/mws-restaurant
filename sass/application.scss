@@ -266,7 +266,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   transition: transform .2s ease;
   vertical-align: middle;
   position: relative;
-  font-size: 1.2em;
+  font-size: 1.1em;
 
   &:hover, &:focus {
     transform: scale(1.2);
@@ -281,6 +281,10 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 
 input, textarea {
   display: block;
+}
+
+.add-reviews__container {
+  padding: 1em;
 }
 
 

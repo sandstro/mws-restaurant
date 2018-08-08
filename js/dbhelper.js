@@ -100,11 +100,8 @@ class DBHelper {
     window.addEventListener('online', () => {
       const data = JSON.parse(localStorage.getItem('review'));
       const offlineLabels = Array.prototype.slice.call(document.querySelectorAll('.restaurant__review__offline__label'));
-      console.log('offlineLabels', offlineLabels);
       offlineLabels.forEach(el => el.remove());
-      if (review.name === 'temp') {
-        DBHelper.postReview(review.data);
-      }
+      if (review.name === 'temp') DBHelper.postReview(review.data);
       localStorage.removeItem('review');
     });
   }
