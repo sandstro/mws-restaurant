@@ -8,7 +8,11 @@ The **Restaurant Reviews** project will be incrementally converted from a static
 
 In **Stage One**, you will take a static design that lacks accessibility and convert the design to be responsive on different sized displays and accessible for screen reader use. You will also add a service worker to begin the process of creating a seamless offline experience for your users.
 
- In **Stage Two**, you will take the responsive, accessible design you built in **Stage One** and connect it to an external server. You’ll begin by using asynchronous JavaScript to request JSON data from the server. You’ll store data received from the server in an offline database using IndexedDB, which will create an app shell architecture. Finally, you’ll work to optimize your site to meet performance benchmarks, which you’ll test using Lighthouse.
+In **Stage Two**, you will take the responsive, accessible design you built in **Stage One** and connect it to an external server. You’ll begin by using asynchronous JavaScript to request JSON data from the server. You’ll store data received from the server in an offline database using IndexedDB, which will create an app shell architecture. Finally, you’ll work to optimize your site to meet performance benchmarks, which you’ll test using Lighthouse.
+ 
+In **Stage Three**, users are able to mark a restaurant as a favorite, this toggle is visible in the application. A form is added to allow users to add their own reviews for a restaurant. Form submission works properly and adds a new review to the database.
+ 
+The client application works offline. JSON responses are cached using the IndexedDB API. Any data previously accessed while connected is reachable while offline. User is able to add a review to a restaurant while offline and the review is sent to the server when connectivity is re-established.
 
 ### How to run the project
 
@@ -18,7 +22,7 @@ In a terminal, check the version of Python you have: `python -V`. If you have Py
 
 2. With your server running, visit the site: `http://localhost:8000`.
 
-3. Fork and clone [this server repository](https://github.com/udacity/mws-restaurant-stage-2). You’ll use this server as an API.
+3. Fork and clone [this server repository](https://github.com/udacity/mws-restaurant-stage-3). You’ll use this server as an API.
 
 #### Local API Server
 
@@ -39,13 +43,9 @@ The server depends on node.js LTS Version: v6.11.2 , npm, and sails.js. Please, 
 # node server
 ```
 
-###### Get Restaurants
+###### Test API by GET: Restaurants
 ````
 # curl "http://localhost:1337/restaurants"
-````
-###### Get Restaurants by id
-````
-curl "http://localhost:1337/restaurants/{3}"
 ````
 
 ## Gulp commands
